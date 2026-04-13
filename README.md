@@ -116,6 +116,8 @@ beauty-dupe-app/
 ```bash
 pip install -r requirements.txt
 streamlit run app.py
+```
+---
 
 📈 Evaluation
 
@@ -131,14 +133,15 @@ Ingredient similarity alone is not enough → embeddings improve performance
 Hybrid models outperform single-method approaches
 Price-aware ranking makes recommendations more practical
 Ingredient normalization is essential due to inconsistent naming (~15k unique ingredients)
+
 🔮 Future Work
 Add explanation system (“Why this is a dupe”)
 Improve weight optimization with learning-to-rank methods
 Expand dataset (Ulta, drugstore brands)
 Precompute similarity for faster deployment
 Add user personalization features
-👩‍💻 Author
 
+👩‍💻 Author
 Jessica Tran
 Computer Science / Data Science Student
 Belmont University
