@@ -121,13 +121,10 @@ streamlit run app.py
 ---
 
 📈 Evaluation
-
 The model is evaluated using:
-
-Top-K similarity scoring
-Percentage of recommendations that are cheaper than the original product
-
-This ensures recommendations are both relevant and cost-effective.
+- Top-K similarity scoring
+- Percentage of recommendations that are cheaper than the original product
+- This ensures recommendations are both relevant and cost-effective.
 
 💡 Key Insights
 - Ingredient similarity alone is not enough → embeddings improve performance
@@ -136,19 +133,19 @@ This ensures recommendations are both relevant and cost-effective.
 - Ingredient normalization is essential due to inconsistent naming (~15k unique ingredients)
 
 🔮 Future Work
-Add explanation system (“Why this is a dupe”)
-Improve weight optimization with learning-to-rank methods
-Expand dataset (Ulta, drugstore brands)
-Precompute similarity for faster deployment
-Add user personalization features
+- Add explanation system (“Why this is a dupe”)
+- Improve weight optimization with learning-to-rank methods
+- Expand dataset (Ulta, drugstore brands)
+- Precompute similarity for faster deployment
+- Add user personalization features
 
 👩‍💻 Author
-Jessica Tran
-Computer Science / Data Science Student
-Belmont University
+- Jessica Tran
+- Computer Science / Data Science Student
+- Belmont University
 
 ⭐ Acknowledgments
-Kaggle dataset contributors
-SentenceTransformers
-Scikit-learn
-Streamlit
+- Kaggle dataset contributors
+- SentenceTransformers
+- Scikit-learn
+- Streamlit
