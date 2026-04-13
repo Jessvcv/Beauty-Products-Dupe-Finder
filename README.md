@@ -101,13 +101,14 @@ The application allows users to:
 ---
 
 ## 📁 Project Structure
+```bash
 beauty-dupe-app/
 │
 ├── app.py # Streamlit frontend
 ├── model.py # ML pipeline + recommender
 ├── requirements.txt # Dependencies
 └── README.md
-
+```
 ---
 
 ## ▶️ How to Run Locally
@@ -129,10 +130,10 @@ Percentage of recommendations that are cheaper than the original product
 This ensures recommendations are both relevant and cost-effective.
 
 💡 Key Insights
-Ingredient similarity alone is not enough → embeddings improve performance
-Hybrid models outperform single-method approaches
-Price-aware ranking makes recommendations more practical
-Ingredient normalization is essential due to inconsistent naming (~15k unique ingredients)
+- Ingredient similarity alone is not enough → embeddings improve performance
+- Hybrid models outperform single-method approaches
+- Price-aware ranking makes recommendations more practical
+- Ingredient normalization is essential due to inconsistent naming (~15k unique ingredients)
 
 🔮 Future Work
 Add explanation system (“Why this is a dupe”)
