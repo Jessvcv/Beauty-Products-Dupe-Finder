@@ -1,116 +1,96 @@
-# 💄 Finding Affordable Alternatives: A Similarity-Based System for Beauty Product Duplication
+# 💄 DupeLab: Beauty Product Duplication Recommender
 
 ## 📌 Overview
-This project builds a **content-based recommendation system** that identifies affordable “dupes” for beauty and skincare products.
+DupeLab is a **content-based recommendation system** that identifies affordable “dupes” for beauty and skincare products.
 
-Consumers often struggle to find lower-cost alternatives to premium products with similar ingredients and effects. This system automates that process by comparing products using **ingredient similarity, semantic embeddings, and pricing information**.
+Given a product, it finds similar alternatives using a combination of:
+- Ingredient similarity
+- Semantic meaning of product descriptions
+- Ingredient overlap
 
-Given a product, the system returns a ranked list of **similar but potentially cheaper alternatives**.
+The goal is to help users discover **lower-cost alternatives without sacrificing formulation similarity**.
 
 ---
 
-## 🎯 Objective
-- Identify functionally similar beauty products (“dupes”)
-- Reduce reliance on anecdotal or influencer-based recommendations
-- Explore whether **ingredient-level similarity can approximate product equivalence**
-- Incorporate **price-awareness into recommendation ranking**
+## 🎯 Problem Statement
+Consumers often want cheaper alternatives (“dupes”) to high-end beauty products, but:
+- Ingredient lists are hard to compare manually
+- Product similarity is subjective
+- Price-to-performance comparisons are not standardized
+
+DupeLab solves this using **data-driven similarity modeling**.
 
 ---
 
 ## 📊 Dataset
 - Source: Kaggle — *Sephora Products and Skincare Reviews*
 - Size: ~8,000+ products
-- Key attributes:
+- Key fields:
   - product_name
   - brand_name
   - primary_category
-  - secondary_category
-  - highlights
   - ingredients
+  - highlights
   - price_usd
 
 ---
 
-## 🧹 Data Preprocessing
-The dataset is cleaned and standardized using NLP techniques:
+## ⚙️ Feature Engineering
 
-- Lowercasing and punctuation removal
-- Ingredient normalization (e.g., aqua → water, parfum → fragrance)
-- Filtering noisy ingredient tokens
-- Splitting ingredients into structured lists and sets
-- Creation of combined textual representation:
-  - ingredients + product highlights
+Each product is transformed into multiple representations:
 
----
-
-## 🧠 Methodology
-
-This system uses a **hybrid similarity approach** combining three signals:
-
-### 1. TF-IDF Vectorization
-Captures lexical similarity between ingredient lists using:
-- Word and bi-grams
-- Document frequency filtering
+### 1. TF-IDF Representation
+- Applied to raw ingredient lists
+- Captures lexical similarity between formulations
 
 ### 2. Sentence Embeddings
-Uses `SentenceTransformer (all-MiniLM-L6-v2)` to encode:
-- Ingredient context
-- Product highlights
-
-This captures deeper **semantic similarity** beyond exact word overlap.
+- Model: `all-MiniLM-L6-v2` (Sentence Transformers)
+- Encodes:
+  - ingredients
+  - product highlights
+- Captures semantic similarity between products
 
 ### 3. Jaccard Similarity
-Measures overlap between ingredient sets to capture **chemical similarity**.
+- Measures overlap between ingredient sets
+- Uses binary multi-label encoding
 
 ---
 
-## ⚖️ Hybrid Similarity Model
-Final similarity score is computed as a weighted combination:
+## 🧠 Hybrid Similarity Model
 
-- TF-IDF similarity → 50%
-- Embedding similarity → 30%
-- Jaccard similarity → 20%
+Final similarity score is computed as:
+- score = w1 * TF-IDF + w2 * Embeddings + w3 * Jaccard
 
-This balances:
-- lexical match
-- semantic meaning
-- ingredient overlap
+Default weights:
+- TF-IDF: 0.5
+- Embeddings: 0.3
+- Jaccard: 0.2
 
 ---
 
-## 🔎 Recommendation System
+## 🔍 Recommendation Engine
 
-For a given product, the system:
+For a given product index:
 
-1. Computes similarity with all other products
-2. Applies filters:
-   - Same product category (optional)
-   - Only cheaper alternatives (optional)
-3. Ranks candidates by hybrid similarity score
-4. Returns top-N most similar products
+1. Compare against all other products
+2. Compute hybrid similarity score
+3. Rank results in descending order
+4. Return top-N most similar products
 
----
-
-## 💰 Price-Aware Filtering
-A key feature of this system is **cost-sensitive recommendation**:
-- Prioritizes products that are similar but lower in price
-- Helps identify realistic “dupes” instead of purely similar items
+### Output includes:
+- Product name
+- Brand
+- Price
+- Similarity score
 
 ---
 
-## 📈 Evaluation
-The system includes a simple evaluation metric:
-
-- Measures the proportion of recommended products that are cheaper than the query product
-- Helps quantify the effectiveness of price-aware filtering
-
----
-
-## 📉 Visualization (Planned / Optional Extension)
-Future improvements include:
-- PCA / t-SNE visualization of product clusters
-- Embedding space analysis of product similarity
-- Category-based clustering insights
+## ⚡ Key Improvements in This Version
+- Preloaded SentenceTransformer model (faster inference)
+- Cleaner modular architecture
+- Correct Jaccard similarity using `pairwise_distances`
+- Unified hybrid scoring function
+- More scalable feature pipeline
 
 ---
 
@@ -118,4 +98,44 @@ Future improvements include:
 
 ### Install dependencies
 ```bash
-pip install pandas numpy scikit-learn sentence-transformers kagglehub
+pip install numpy pandas scikit-learn sentence-transformers kagglehub
+```
+Run recommender
+- from recommender import BeautyDupeRecommender
+- model = BeautyDupeRecommender()
+- model.load_data()
+- model.build_features()
+
+Get recommendations
+model.get_top_dupes(idx=10, top_n=5)
+
+🌐 Streamlit App (DupeLab UI)
+
+DupeLab includes a Streamlit-based interactive interface.
+
+### Features:
+- 🔍 Product search
+- 💄 Product selection panel
+- 💡 Top dupe recommendations
+- 🎲 “Surprise Me” random product exploration
+
+### Architecture:
+- Streamlit frontend
+- Cached ML model loading (@st.cache_resource)
+- Real-time inference using hybrid similarity engine
+
+### 🔬 Key Insights
+- Hybrid similarity significantly improves recommendation quality
+- Ingredient overlap alone is insufficient → embeddings add semantic context
+- Price filtering + similarity creates meaningful “dupe discovery”
+- Precomputed embeddings improve runtime efficiency
+
+### 🔮 Future Work
+- Add FAISS for faster nearest-neighbor search
+- Deploy web app (Streamlit Cloud / HuggingFace Spaces)
+- Add explainability (“why this is a dupe” feature)
+- Fine-tune embeddings on skincare domain data
+- Add user preference personalization layer
+
+Author
+- Jessica Tran
