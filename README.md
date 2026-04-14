@@ -1,151 +1,121 @@
-# Beauty-Products-Dupe-Finder
+# 💄 Finding Affordable Alternatives: A Similarity-Based System for Beauty Product Duplication
 
-A content-based recommendation system that identifies **affordable skincare and beauty product dupes** using ingredient similarity, natural language processing, and price-aware ranking.
+## 📌 Overview
+This project builds a **content-based recommendation system** that identifies affordable “dupes” for beauty and skincare products.
 
----
+Consumers often struggle to find lower-cost alternatives to premium products with similar ingredients and effects. This system automates that process by comparing products using **ingredient similarity, semantic embeddings, and pricing information**.
 
-## 🚀 Overview
-
-Consumers often search for “dupes” — lower-cost alternatives to expensive beauty products with similar formulations. However, identifying these alternatives typically requires manual comparison or unreliable online recommendations.
-
-This project solves that problem by building a **content-based recommender system** that automatically finds similar products based on their **ingredient lists and product features**, while prioritizing **cheaper alternatives**.
+Given a product, the system returns a ranked list of **similar but potentially cheaper alternatives**.
 
 ---
 
-## 🎯 Key Features
+## 🎯 Objective
+- Identify functionally similar beauty products (“dupes”)
+- Reduce reliance on anecdotal or influencer-based recommendations
+- Explore whether **ingredient-level similarity can approximate product equivalence**
+- Incorporate **price-awareness into recommendation ranking**
 
-- 🧠 **Hybrid similarity model**
-  - TF-IDF (ingredient overlap)
-  - Sentence-BERT embeddings (semantic similarity)
-  - Jaccard similarity (ingredient set overlap)
+---
 
-- 💰 **Price-aware ranking**
-  - Prioritizes cheaper alternatives when recommending dupes
+## 📊 Dataset
+- Source: Kaggle — *Sephora Products and Skincare Reviews*
+- Size: ~8,000+ products
+- Key attributes:
+  - product_name
+  - brand_name
+  - primary_category
+  - secondary_category
+  - highlights
+  - ingredients
+  - price_usd
 
-- 🔍 **Smart filtering**
-  - Same product category
-  - Option to return only cheaper products
+---
 
-- 📊 **Evaluation metric**
-  - Measures % of recommended products that are cheaper
+## 🧹 Data Preprocessing
+The dataset is cleaned and standardized using NLP techniques:
 
-- 🌐 **Interactive web app**
-  - Built with Streamlit for real-time recommendations
+- Lowercasing and punctuation removal
+- Ingredient normalization (e.g., aqua → water, parfum → fragrance)
+- Filtering noisy ingredient tokens
+- Splitting ingredients into structured lists and sets
+- Creation of combined textual representation:
+  - ingredients + product highlights
 
 ---
 
 ## 🧠 Methodology
 
-### 1. Data Preprocessing
-- Lowercasing and cleaning ingredient text
-- Removing noise and invalid entries
-- Standardizing ingredient names (e.g., "aqua" → "water")
+This system uses a **hybrid similarity approach** combining three signals:
 
-### 2. Feature Engineering
-- Ingredient tokenization
-- Ingredient set construction for overlap comparison
+### 1. TF-IDF Vectorization
+Captures lexical similarity between ingredient lists using:
+- Word and bi-grams
+- Document frequency filtering
 
-### 3. Similarity Modeling
+### 2. Sentence Embeddings
+Uses `SentenceTransformer (all-MiniLM-L6-v2)` to encode:
+- Ingredient context
+- Product highlights
 
-We compute similarity using three approaches:
+This captures deeper **semantic similarity** beyond exact word overlap.
 
-- **TF-IDF + Cosine Similarity**
-- **Sentence-BERT Embeddings**
-- **Jaccard Similarity**
-
-### 4. Hybrid Model
-
-Final similarity is computed as a weighted combination: Hybrid = w1(TF-IDF) + w2(Embeddings) + w3(Jaccard)
-
-
-### 5. Price-Aware Ranking
-Final Score = 0.8 * Similarity + 0.2 * Price Score
-
+### 3. Jaccard Similarity
+Measures overlap between ingredient sets to capture **chemical similarity**.
 
 ---
 
-## 📊 Dataset
+## ⚖️ Hybrid Similarity Model
+Final similarity score is computed as a weighted combination:
 
-- Source: Kaggle — Sephora Products and Skincare Reviews
-- ~8,000+ products
-- Features used:
-  - Product name
-  - Brand name
-  - Category
-  - Ingredients
-  - Highlights
-  - Price (USD)
+- TF-IDF similarity → 50%
+- Embedding similarity → 30%
+- Jaccard similarity → 20%
 
----
-
-## 🌐 Streamlit App
-
-The application allows users to:
-
-- Select a product
-- View product details
-- Receive top dupe recommendations
-- Compare price and similarity scores
+This balances:
+- lexical match
+- semantic meaning
+- ingredient overlap
 
 ---
 
-## 🛠️ Tech Stack
+## 🔎 Recommendation System
 
-- Python
-- Pandas / NumPy
-- Scikit-learn
-- SentenceTransformers
-- Streamlit
-- KaggleHub
+For a given product, the system:
+
+1. Computes similarity with all other products
+2. Applies filters:
+   - Same product category (optional)
+   - Only cheaper alternatives (optional)
+3. Ranks candidates by hybrid similarity score
+4. Returns top-N most similar products
 
 ---
 
-## 📁 Project Structure
+## 💰 Price-Aware Filtering
+A key feature of this system is **cost-sensitive recommendation**:
+- Prioritizes products that are similar but lower in price
+- Helps identify realistic “dupes” instead of purely similar items
+
+---
+
+## 📈 Evaluation
+The system includes a simple evaluation metric:
+
+- Measures the proportion of recommended products that are cheaper than the query product
+- Helps quantify the effectiveness of price-aware filtering
+
+---
+
+## 📉 Visualization (Planned / Optional Extension)
+Future improvements include:
+- PCA / t-SNE visualization of product clusters
+- Embedding space analysis of product similarity
+- Category-based clustering insights
+
+---
+
+## 🚀 How to Run
+
+### Install dependencies
 ```bash
-beauty-dupe-app/
-│
-├── app.py # Streamlit frontend
-├── model.py # ML pipeline + recommender
-├── requirements.txt # Dependencies
-└── README.md
-```
----
-
-## ▶️ How to Run Locally
-
-### 1. Install dependencies
-```bash
-pip install -r requirements.txt
-streamlit run app.py
-```
----
-
-📈 Evaluation
-The model is evaluated using:
-- Top-K similarity scoring
-- Percentage of recommendations that are cheaper than the original product
-- This ensures recommendations are both relevant and cost-effective.
-
-💡 Key Insights
-- Ingredient similarity alone is not enough → embeddings improve performance
-- Hybrid models outperform single-method approaches
-- Price-aware ranking makes recommendations more practical
-- Ingredient normalization is essential due to inconsistent naming (~15k unique ingredients)
-
-🔮 Future Work
-- Add explanation system (“Why this is a dupe”)
-- Improve weight optimization with learning-to-rank methods
-- Expand dataset (Ulta, drugstore brands)
-- Precompute similarity for faster deployment
-- Add user personalization features
-
-👩‍💻 Author
-- Jessica Tran
-- Computer Science / Data Science Student
-- Belmont University
-
-⭐ Acknowledgments
-- Kaggle dataset contributors
-- SentenceTransformers
-- Scikit-learn
-- Streamlit
+pip install pandas numpy scikit-learn sentence-transformers kagglehub
