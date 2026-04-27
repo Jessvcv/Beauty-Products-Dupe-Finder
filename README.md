@@ -204,5 +204,12 @@ print(model.get_top_dupes(idx=10, top_n=5))
 - Add explainability layer (“why this is a dupe”)
 - Introduce user personalization
 - Deploy via Streamlit Cloud or HuggingFace Spaces
+## Advanatced Topics
+- NLP
+- Feature Engineering
+- PCA
+- T-SNE
+- simple website creation
+- online database
 ### 👩‍💻 Author
 Jessica Tran
